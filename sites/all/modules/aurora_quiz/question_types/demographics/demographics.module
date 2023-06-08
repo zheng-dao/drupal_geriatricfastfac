@@ -1,0 +1,132 @@
+<?php
+
+/**
+ * @file
+ * Demographics question type for quiz module
+ *
+ * Allows the creation of "Demographics" questions
+ */
+
+/**
+ * Implements hook_help().
+ */
+function demographics_help($path, $args) {
+	switch ($path) {
+		case 'admin/modules#description':
+			return t('Demographics question type for the quiz module.');
+		case 'node/add#demographics':
+		case 'admin/help#demographics':
+			return t('A question type for the quiz module. Provides a form for a user to enter their demographic/contact information.');
+		default:
+			break;
+	}
+}
+
+/**
+ * Implements hook_quiz_question_info().
+ */
+function demographics_quiz_question_info() {
+	return array(
+		'demographics' => array(
+			'name' => t('Demographics question'),
+			'description' => t('Quiz questions that allow a user to enter their demographic/contact information.'),
+			'question provider' => 'DemographicsQuestion',
+			'response provider' => 'DemographicsResponse',
+			'module' => 'quiz_question', // All wrapper functions are in that module.
+		),
+	);
+}
+
+/**
+ * Implements hook_quiz_question_config().
+ */
+function demographics_quiz_question_config() {
+	return $form;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function demographics_theme() {
+	return array(
+		'demographics_answering_form' => array(
+			'render element' => 'form',
+			'path' => drupal_get_path('module', 'demographics') . '/theme',
+			'template' => 'demographics-answering-form',
+		),
+		'demographics_response_form' => array(
+			'render element' => 'form',
+			'path' => drupal_get_path('module', 'demographics') . '/theme',
+			//'file' => 'demographics.theme.inc',
+			'file' => 'demographics-answering-form.tpl.php',
+		),
+	);
+}
+
+//function demographics_report_submit($values) {
+//    watchdog('demographics stuff inside demographics_report_submit()', '%view', array('%view' => dprint_r($values, TRUE)));
+//}
+
+/**
+ * Theme the response part of the response report
+ *
+ * @param $metadata
+ *  Can be used as a table header
+ * @param $data
+ *  Can be used as table rows
+ */
+function theme_demographics_response($variables) {
+	$metadata = $variables['metadata'];
+	$data = $variables['data'];
+
+	return theme('table', array('header' => $metadata, 'rows' => $data));
+}
+
+function demographics_get_answer($question_nid, $quesiton_vid, $result_id) {
+	$results = db_query('SELECT dem.answer_id, dem.answer, dem.question_vid, dem.question_nid, dem.result_id
+						FROM {quiz_demographics_user_answers} dem
+						JOIN {quiz_node_results} qnr ON (dem.result_id = qnr.result_id)
+						WHERE dem.question_nid = :qnid AND dem.question_vid = :qvid AND dem.result_id = :rid', array(':qnid' => $question_nid, ':qvid' => $question_vid, ':rid' => $result_id))->fetchAssoc();
+
+	return $results ? $results : FALSE;
+}
+
+/**
+	* Implements hook_token_info().
+	*/
+function demographics_token_info() {
+// you will find this in the node section in path auto replacement pattrens
+// then you could use [node:relatedtype]/[node:title] as a url pattern
+	$info['tokens']['node']['quiz_email'] = array(
+		'name' => t('Quiz taker\'s email'),
+		'description' => t('The email address of the quiz taker'),
+	);
+
+	return $info;
+}
+
+/**
+	* Implements hook_tokens().
+	*/
+
+function demographics_tokens($type, $tokens, array $data = array(), array $options = array()) {
+$replacements = array();
+	if ($type == 'node' && !empty($data['node'])) {
+		$node = $data['node'];
+
+		foreach ($tokens as $name => $original) {
+			switch ($name) {
+				case 'quiz_email':
+					$toreplace = demographics_set_quiz_email_token();
+					$replacements[$original] = $toreplace;
+					break;
+			}
+		}
+	}
+	return $replacements;
+}
+
+// however we will need to call this function from our code or see above
+function demographics_set_quiz_email_token() {
+	return 'HELLO WORLD!';
+}

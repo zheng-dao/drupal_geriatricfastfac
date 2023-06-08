@@ -1,0 +1,137 @@
+<?php
+/**
+ * @file
+ * The installer file for demographics question type. *
+ */
+
+/**
+ * Implements hook_install().
+ */
+function demographics_install() {
+	// Add body field to demographics node
+	quiz_question_add_body_field('demographics');
+
+	if (!db_table_exists('quiz_demographics_node')) {
+		// TODO The drupal_(un)install_schema functions are called automatically in D7.
+		// drupal_install_schema('demographics')
+	} else {
+		// TODO Please review the conversion of this statement to the D7 database API syntax.
+		/* db_query("UPDATE {system} SET name = 'demographics' WHERE name = 'demographics'") */
+		db_update('system')
+			->fields(array(
+				'name' =>  'demographics',
+			))
+			->condition('name', 'demographics')
+			->execute();
+		// TODO Please review the conversion of this statement to the D7 database API syntax.
+		/* db_query("UPDATE {node} SET type = 'demographics' WHERE type = 'true_false'") */
+		db_update('node')
+			->fields(array(
+				'type' =>  'demographics',
+			))
+			->condition('type', 'demographics')
+			->execute();
+		// TODO Please review the conversion of this statement to the D7 database API syntax.
+		/* db_query("UPDATE {system} SET type = 'demographics' WHERE type = 'demographics'") */
+		db_update('system')
+			->fields(array(
+				'type' =>  'demographics',
+			))
+			->condition('type', 'demographics')
+			->execute();
+		// TODO Please review the conversion of this statement to the D7 database API syntax.
+		/* db_query("UPDATE {taxonomy_vocabulary_node_type} SET type = 'demographics' WHERE type = 'demographics'") */
+		/*
+		db_update('taxonomy_vocabulary_node_type')
+			->fields(array(
+				'type' =>  'demographics',
+			))
+			->condition('type', 'demographics')
+			->execute();*/
+	}
+	variable_set('node_options_demographics', array('status'));
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function demographics_uninstall() {
+	// TODO The drupal_(un)install_schema functions are called automatically in D7.
+	// drupal_uninstall_schema('demographics')
+}
+
+/**
+ * Implements hook_schema().
+ */
+function demographics_schema() {
+	//////////////////////
+	// DEMOGRAPHICS tables.
+	//////////////////////
+
+	// Extensions to nodes for demographics
+	$schema['quiz_demographics_node'] = array(
+		'fields' => array(
+			'nid' => array(
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+			),
+			'vid' => array(
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+			),
+			// One of (0) textfield and (1) textarea
+			'text_entry_type' => array(
+				'type' => 'int',
+				'size' => 'tiny',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+				'default' => 0
+			)
+		),
+		'primary key' => array(
+			'vid', 'nid'
+		),
+	);
+
+	// Place to store user answers for demographics questions
+	$schema['quiz_demographics_user_answers'] = array(
+		'fields' => array(
+			'question_nid' => array(
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+			),
+			'question_vid' => array(
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+			),
+			'result_id' => array(
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+			),
+			'email' => array(
+				'type' => 'text',
+			),
+			'profession' => array(
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => FALSE,
+			),
+			'institution' => array(
+				'type' => 'text',
+			),
+			'additional_email' => array(
+				'type' => 'text',
+			),
+		),
+		'primary key' => array(
+			'result_id', 'question_nid', 'question_vid',
+		),
+	);
+
+	return $schema;
+}

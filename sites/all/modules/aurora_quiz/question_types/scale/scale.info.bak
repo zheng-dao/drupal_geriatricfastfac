@@ -1,0 +1,16 @@
+name = Scale
+package = Aurora Quiz
+description = Scale question type for quiz.
+core = 7.x
+dependencies[] = quiz
+dependencies[] = quiz_question
+
+files[] = scale.classes.inc
+files[] = scale.test
+
+; Information added by Drupal.org packaging script on 2014-11-22
+version = "7.x-5.0-alpha5"
+core = "7.x"
+project = "aurora_quiz"
+datestamp = "1416683940"
+

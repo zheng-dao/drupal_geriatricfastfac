@@ -1,0 +1,64 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "1eb470ac986219982b27cb464efdc636",
+    "content-hash": "cd7c9aad83b36b9e8d3d0c3af4531c77",
+    "packages": [
+        {
+            "name": "lillockey/utilities",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lillockey/utilities.git",
+                "reference": "390382fad0b125f3e977e564485bac5e23d03498"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lillockey/utilities/zipball/390382fad0b125f3e977e564485bac5e23d03498",
+                "reference": "390382fad0b125f3e977e564485bac5e23d03498",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.5.0"
+            },
+            "suggest": {
+                "php-curl-class/php-curl-class": "Makes working with cURL much easier"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "lillockey": "src/"
+                },
+                "psr-4": {
+                    "lillockey\\Utilities\\": "src/lillockey/Utilities/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Goehrs",
+                    "email": "lillockey@gmail.com"
+                }
+            ],
+            "description": "General utilities",
+            "time": "2016-03-20 22:51:46"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "lillockey/utilities": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

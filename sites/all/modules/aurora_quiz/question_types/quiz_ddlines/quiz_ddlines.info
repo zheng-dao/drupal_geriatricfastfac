@@ -1,0 +1,13 @@
+name = Drag and drop with lines for Quiz
+package = Aurora Quiz
+description = Drag and drop with lines question type for quiz.
+core = 7.x
+dependencies[] = quiz
+dependencies[] = quiz_question
+dependencies[] = image
+files[] = quiz_ddlines.classes.inc
+; Information added by Drupal.org packaging script on 2014-12-03
+version = "7.x-5.0-ascedia"
+core = "7.x"
+project = "aurora_quiz"
+datestamp = "1417635455"

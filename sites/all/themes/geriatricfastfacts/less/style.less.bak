@@ -1,0 +1,22 @@
+// Media query variables.
+//@query-xs-only: ~"(max-width: 767px)";
+@query-sm-min: ~"(min-width: 768px)";
+@query-md-min: ~"(min-width: 992px)";
+@query-lg-min: ~"(min-width: 1200px)";
+@query-hidpi: ~"(-webkit-min-device-pixel-ratio: 1.3),(min-resolution: 153.6dpi),(min-resolution: 1.3dppx)";
+
+// Bootstrap library.
+@import 'bootstrap.less';
+
+// Base-theme overrides.
+@import 'overrides.less';
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+
+// Theme specific.
+@import 'header.less';
+@import 'content.less';
+@import 'footer.less';

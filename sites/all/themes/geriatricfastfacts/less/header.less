@@ -1,0 +1,59 @@
+header{
+	.contextual-links-region{position:inherit;}
+	
+	.nav > li > a {
+	
+		@media @query-sm-min {padding-left: 3px; padding-right:3px;}
+		@media @query-md-min {padding-left: 10px; padding-right:10px;}
+	}
+	
+	.badge{margin-left: 3px;}
+
+	a.navbar-brand {
+	
+	//background: transparent url(images/nav-logo.png) no-repeat left top;
+	background-image: url(images/nav-logo.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	
+		.image-2x("images/nav-logo@2x.png", 279px, 34px);
+		
+		-webkit-background-size: 279px 34px;
+		-moz-background-size: 279px 34px;
+		-o-background-size: 279px 34px;
+		background-size: 279px 34px;
+		text-indent:-9999px;
+		width:279px;
+		height:34px;
+		margin-right:26px;
+		margin-top:8px;
+		
+		
+		@media @tablet{
+			background: transparent url(images/nav-logo.png) no-repeat left top;	
+			.image-2x("images/nav-logo@2x.png", 200px, 25px);
+			width:200px;
+			margin-top:13px;	
+			height:25px;
+			-webkit-background-size: 200px 25px;
+			-moz-background-size: 200px 25px;
+			-o-background-size: 200px 25pxx;
+			background-size: 200px 25px;			
+			padding:5px;
+			
+		}
+		@media @mobile{
+			background: transparent url(images/nav-logo.png) no-repeat left top;
+			.image-2x("images/nav-logo@2x.png", 200px, 25px);
+			width:200px;
+			margin-top:13px;
+			height:25px;
+			padding:5px;
+			-webkit-background-size: 200px 25px;
+			-moz-background-size: 200px 25px;
+			-o-background-size: 200px 25px;
+			background-size: 200px 25px;				
+			
+		}
+	}
+}

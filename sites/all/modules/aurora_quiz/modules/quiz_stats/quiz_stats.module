@@ -1,0 +1,297 @@
+<?php
+
+/**
+ * @file
+ * Quiz stats
+ *
+ * Module creates a report to analyse and compare the results of quiz attendees.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function quiz_stats_help($path, $arg) {
+  if ($path == 'admin/help#quiz_stats') {
+    return '<p>' . t('Module creates a report to analyse and compare the results of quiz attendees. The reports will be displayed visually using goolge chart API.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function quiz_stats_permission() {
+  $permission = array(
+    'administer quiz configuration' => array(
+      'title' => t('administer quiz configuration'),
+    ),
+    'administer quiz configuration' => array(
+      'title' => t('administer quiz configuration'),
+    ),
+  );
+  return $permission;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function quiz_stats_menu() {
+  $items['admin/quiz/reports/stats/creator'] = array(
+    'title' => 'Quiz Statistics',
+    'description' => 'Generates a report on quiz results for quiz creators.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_get_basic_stats',
+    'access arguments' => array('administer quiz configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  $items['admin/quiz/reports/stats/all-enrollment'] = array(
+    'title' => 'All Enrollment by Quiz',
+    'description' => 'Generates a report on quiz results for quiz creators.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_get_all_enrollment',
+    'access arguments' => array('administer quiz configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  $items['admin/quiz/reports/stats/all-answers'] = array(
+    'title' => 'All Answers by Quiz',
+    'description' => 'Generates a report on quiz results for quiz creators.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_get_all_answers_by_quiz',
+    'access arguments' => array('administer quiz configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+   $items['admin/quiz/reports/overall-report'] = array(
+    'title' => 'Overall Report',
+    'description' => 'Generates a report on overall quiz results for quiz creators.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_get_overall_report',
+    'access arguments' => array('administer quiz configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  $items['admin/quiz/reports/all-enrollment'] = array(
+    'title' => 'All Enrollment Report',
+    'description' => 'Generates a report on overall quiz results for quiz creators.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_get_all_enrollment_report',
+    'access arguments' => array('administer quiz configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  
+  $items['node/%node/quiz/statistics'] = array(
+    'title' => 'Statistics',
+    'description' => 'Generates a report on quiz results for quiz creators.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_revision_selector_page',
+    'page arguments' => array(1),
+    'access callback' => 'quiz_type_confirm',
+    'access arguments' => array(1, 'administer quiz configuration'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 8,
+  );
+  
+  $items['node/%node/quiz/all-enrollment'] = array(
+    'title' => 'All Enrollment by Quiz',
+    'description' => 'All Enrollment.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_revision_selector_all_enrollment_page',
+    'page arguments' => array(1),
+    'access callback' => 'quiz_type_confirm',
+    'access arguments' => array(1, 4),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 4,
+  );
+  
+  $items['node/%node/quiz/all-enrollment/%'] = array(
+    'title' => 'All Enrollment',
+    'description' => 'Generates a report on quiz results for quiz creators.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_get_all_quiz_enrollment',
+    'page arguments' => array(1,4),
+    'access callback' => 'quiz_stats_validate_vid',
+    'access arguments' => array(1, 4),
+    'type' => MENU_CALLBACK,
+    'weight' => 4,
+  );
+  
+ /* $items['node/%node/quiz/overall-report'] = array(
+    'title' => 'Overall Report',
+    'description' => 'Overall Report for All Quizzes.',
+    'file' => 'quiz_stats.admin.inc',
+    'page arguments' => array(1),
+    'access callback' => 'quiz_stats_get_overall_report',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 5,
+  );*/
+  
+  $items['node/%node/quiz/all-answers'] = array(
+    'title' => 'All Answers by Quiz',
+    'description' => 'All Answers by Quiz.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_revision_selector_all_answers_by_quiz',
+    'page arguments' => array(1),
+    'access callback' => 'quiz_type_confirm',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 5,
+  );
+  
+   $items['node/%node/quiz/all-answers/%'] = array(
+    'title' => 'All Answers by Quiz Revision',
+    'description' => 'Generates a report of all quiz answers by quiz.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_get_all_answers_by_quiz_and_revision',
+    'page arguments' => array(1,4),
+    'access callback' => 'quiz_stats_validate_vid',
+    'access arguments' => array(1, 4),
+    'type' => MENU_CALLBACK,
+    'weight' => 4,
+  );
+  
+  $items['node/%node/quiz/aggregate-answers'] = array(
+    'title' => 'Aggregate Answers by Quiz',
+    'description' => 'Aggregate Answers by Quiz.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_revision_selector_aggregate_answers_by_quiz',
+    'page arguments' => array(1),
+    'access callback' => 'quiz_type_confirm',
+    'access arguments' => array(1, 4),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 5,
+  );
+  
+  
+  $items['node/%node/quiz/aggregate-answers/%'] = array(
+    'title' => 'Aggregate Answers by Quiz Revision',
+    'description' => 'Generates a report of all quiz answers by quiz.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_get_aggregate_answers_by_quiz_and_revision',
+    'page arguments' => array(1,4),
+    'access callback' => 'quiz_stats_validate_vid',
+    'access arguments' => array(1, 4),
+    'type' => MENU_CALLBACK,
+    'weight' => 4,
+  );
+  
+  
+  
+  $items['node/%node/quiz/statistics/%'] = array(
+    'title' => 'Statistics',
+    'description' => 'Generates a report on quiz results for quiz creators.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_get_adv_stats',
+    'page arguments' => array(4),
+    'access callback' => 'quiz_stats_validate_vid',
+    'access arguments' => array(1, 4),
+    'type' => MENU_CALLBACK,
+    'weight' => 8,
+  );
+  $items['user/%/stats'] = array(
+    'title' => 'Result Statistics',
+    'description' => 'Generates a report on quiz results for quiz creators.',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_get_basic_stats',
+    'page arguments' => array(1),
+    'access arguments' => array('administer quiz configuration'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['user/%/stats/%/view'] = array(
+    'title' => 'Result Statistics',
+    'file' => 'quiz_stats.admin.inc',
+    'page callback' => 'quiz_stats_get_adv_stats',
+    'page arguments' => array(3, 1),
+    'access arguments' => array('administer quiz configuration'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ 
+ ADD CUSTOM REPORTING CALLBACKS HERE - JG
+ */
+function quiz_stats_theme() {
+  $path = drupal_get_path('module', 'quiz_stats') . '/theme';
+  return array(
+    'quiz_stats_get_basic_stats' => array(
+      'variables' => array('results' => NULL),
+      'file' => 'quiz_stats.admin.inc',
+    ),
+	'quiz_stats_get_all_enrollment' => array(
+      'variables' => array('results' => NULL),
+      'file' => 'quiz_stats.admin.inc',
+    ),
+	'quiz_stats_get_overall_report' => array(
+     
+	 'variables' => array('content' => NULL),
+	  'template' => 'quiz_stats_get_overall_report',
+    ),
+	'quiz_stats_get_all_enrollment_report' => array(
+     
+	 'variables' => array('content' => NULL),
+	  'template' => 'quiz_stats_get_all_enrollment_report',
+    ),
+	'quiz_stats_get_all_answers_by_quiz' => array(
+      'variables' => array('results' => NULL),
+      'file' => 'quiz_stats.admin.inc',
+    ),
+    'date_vs_takeup_count' => array(
+      'variables' => array('takeup' => NULL),
+      'file' => 'quiz_stats.admin.inc',
+    ),
+    'get_quiz_status_chart' => array(
+      'variables' => array('quiz' => NULL),
+      'file' => 'quiz_stats.admin.inc',
+    ),
+    'quiz_top_scorers' => array(
+      'variables' => array('scorer' => NULL),
+      'file' => 'quiz_stats.admin.inc',
+    ),
+    'quiz_grade_range' => array(
+      'variables' => array('range' => NULL),
+      'file' => 'quiz_stats.admin.inc',
+    ),
+    'quiz_stats_revision_selector' => array(
+      'variables' => array('content' => NULL),
+      'path' => $path,
+      'template' => 'quiz_stats_revision_selector',
+    ),
+	
+	'quiz_stats_revision_selector_all_enrollment' => array(
+      'variables' => array('content' => NULL),
+      'path' => $path,
+      'template' => 'quiz_stats_revision_selector_all_enrollment',
+    ),
+	
+    'quiz_stats_charts' => array(
+      'variables' => array('charts' => NULL),
+      'path' => $path,
+      'template' => 'quiz_stats_charts',
+    ),
+  );
+}
+
+/**
+ * Validate that a node is of type quiz, and that the user has access to it, and that the vid is a vid of that quiz
+ *
+ * @param $quiz
+ *  The quiz node
+ * @param $vid
+ *  The version id
+ * @return
+ *  TRUE if user has access
+ */
+function quiz_stats_validate_vid($quiz, $vid) {
+  if ($quiz->type != 'quiz') {
+    return FALSE;
+  }
+  if (!user_access('administer quiz configuration')) {
+    return FALSE;
+  }
+  return $quiz->nid == db_query('SELECT n.nid FROM {node} n INNER JOIN {node_revision} nr ON (n.nid = nr.nid) WHERE nr.vid = :vid', array(':vid' => $vid))->fetchField();
+}

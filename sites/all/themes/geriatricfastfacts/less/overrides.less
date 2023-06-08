@@ -1,0 +1,430 @@
+// Bootstrap variables.
+@import 'variables.less';
+
+// Media query variables.
+@mobile:  ~"(max-width: 767px)";
+@tablet:  ~"(min-width: 768px) and (max-width: 991px)";
+@normal:  ~"(min-width: 992px) and (max-width: 1199px)";
+@wide:    ~"(min-width: 1200px)";
+
+// 2x images
+.image-2x(@file-2x; @width-1x; @height-1x) {
+  @media (-webkit-min-device-pixel-ratio: 1.3),
+           (min-resolution: 153.6dpi),
+           (min-resolution: 1.3dppx)
+  {
+    background-image: url("@{file-2x}");
+    background-size: @width-1x @height-1x;
+  }
+}
+
+// Border Radius
+.border-radius(@radius) {
+  -webkit-border-radius: @radius;
+     -moz-border-radius: @radius;
+          border-radius: @radius;
+}
+
+// Drop shadows.
+.box-shadow(@shadow) {
+  -webkit-box-shadow: @shadow;
+     -moz-box-shadow: @shadow;
+          box-shadow: @shadow;
+}
+
+html {
+  &.overlay-open .navbar-fixed-top {
+    z-index: 400;
+  }
+  &.js {
+    // Collapsible fieldsets.
+    fieldset.collapsed {
+     height: auto;
+    }
+    // Throbbers.
+    input.form-autocomplete {
+      background-position: 100% 8px; /* LTR */
+      background-repeat: no-repeat;
+    }
+    input.throbbing {
+      background-position: 100% -13px; /* LTR */
+    }
+  }
+}
+body {
+  padding-top: 50px;
+
+  @media @mobile {
+    // Fix horizontal scrolling on iOS devices.
+    // http://drupal.org/node/1870076
+    position: relative;
+  }
+  
+  // Core admin toolbar.
+  &.toolbar .navbar-fixed-top {
+   top: 30px;
+  }
+  &.toolbar-drawer .navbar-fixed-top {
+   top: 65px;
+  }
+  &.admin-expanded.admin-vertical.admin-nw .navbar,
+  &.admin-expanded.admin-vertical.admin-sw .navbar {
+    margin-left: 260px;
+  }
+  div#admin-toolbar {
+    z-index: 500;
+  }
+  @media @normal, @wide {
+    &.toolbar {
+      padding-top: 94px !important;
+    }
+    &.toolbar-drawer {
+      padding-top: 129px !important;
+    }
+  }
+  // Admin_menu toolbar.
+  #admin-menu {
+    .box-shadow(none);
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    z-index: 1100;
+    .dropdown li {
+      line-height: normal;
+    }
+  }
+  &.admin-menu {
+    html & {
+      margin-top: 28px !important;
+    }
+    .navbar-fixed-top {
+      top: 28px;
+    }
+  }
+}
+
+// Element invisible fix
+.element-invisible {
+  margin: 0;
+  padding: 0;
+  width: 1px;
+}
+
+// Branding.
+.navbar .logo {
+  margin-top: 5px;
+  margin-right: 10px;
+}
+#site-name {
+  line-height: 1;
+  margin: 0;
+}
+
+// Page header.
+.page-header {
+  margin-top: 0;
+}
+
+// Blocks
+.block {
+  h2.block-title {
+    margin-top: 0;
+  }
+}
+
+.main-container {
+  	h2.block-title {
+		margin-left: 15px;
+		margin-top: 15px;
+		border-bottom: 1px solid @gray-lighter;
+    	padding-bottom: 13px;
+	}
+  }
+
+.footer .block {
+  h2.block-title {
+    margin-top: 20px;
+	margin-bottom: 9px;
+  }
+}
+
+
+// Search form.
+form#search-block-form {
+  margin: 0;
+}
+.navbar #block-search-form {
+  float: right;
+  margin: 5px 0 5px 5px;
+  @media @mobile, @tablet {
+    float: none;
+  }
+}
+fieldset.search-advanced {
+  padding-bottom: 1.5em;
+  margin-top: 1em;
+}
+.navbar-search .control-group {
+  margin-bottom:0px;
+}
+
+// Action Links
+ul.action-links {
+  margin-bottom: 2em;
+  li {
+    display: inline;
+    padding-right: 1.5em;
+  }
+  [class^="icon-"], [class*=" icon-"] {
+    padding-right: 0.5em;
+  }
+}
+
+// Form elements.
+input, textarea, select, .uneditable-input {
+  max-width: 100%;
+  width: auto;
+  .input-sm;
+}
+input.error {
+  color: @state-danger-text;
+  border-color: @state-danger-border;
+}
+.form-actions{
+  clear: both;
+}
+.resizable-textarea textarea {
+  .border-radius(~"4px 4px 0 0");
+}
+.help-block, .control-group .help-inline {
+  color: @gray-light;
+  font-size: 12px;
+  margin: 5px 0 10px;
+  padding: 0;
+}
+a.tabledrag-handle .handle {
+  height: auto;
+  width: auto;
+}
+
+.form-search{
+.form-control{height:auto;}
+
+}
+
+.ui-autocomplete-input {
+	background-position: 100% 12px;
+}
+.ui-autocomplete-input.ui-autocomplete-loading {
+	background-position: 100% -12px;
+}
+
+// Error containers.
+.error {
+  color: @state-danger-text;
+}
+div.error,
+table tr.error {
+  background-color: @state-danger-bg;
+  color: @state-danger-text;
+}
+.control-group.error {
+  background: none;
+  label, .control-label {
+    color: @state-danger-text;
+    font-weight: 600;
+  }
+  input, textarea, select, .uneditable-input {
+    color: @input-color;
+    border: 1px solid @input-border;
+  }
+  .help-block, .help-inline {
+    color: @text-color;
+  }
+}
+
+// Lists
+ul li.collapsed,
+ul li.expanded,
+ul li.leaf {
+  list-style: none;
+  list-style-image: none;
+}
+
+// Vertical tabs.
+.vertical-tabs {
+  .form-type-textfield input {
+    width: auto;
+  }
+  .form-item{
+    margin: 1em 0;
+  }
+}
+
+// Submitted
+.submitted {
+  margin-bottom: 1em;
+  font-style: italic;
+  font-weight: normal;
+  color: #777;
+}
+
+// Password strength indicator.
+.password-strength {
+  width: 17em;
+  float: right;  /* LTR */
+  margin-top: 1.4em;
+}
+.password-strength-title {
+  display: inline;
+}
+.password-strength-text {
+  float: right; /* LTR */
+  font-weight: bold;
+}
+.password-indicator {
+  background-color: darken(@input-color-placeholder, 2%);
+  height: 0.3em;
+  width: 100%;
+  div {
+    height: 100%;
+    width: 0%;
+    background-color: @input-color-placeholder;
+  }
+}
+input.password-confirm,
+input.password-field {
+  width: 16em;
+  margin-bottom: 0.4em;
+}
+div.password-confirm {
+  float: right;  /* LTR */
+  margin-top: 1.5em;
+  visibility: hidden;
+  width: 17em;
+}
+div.form-item div.password-suggestions {
+  padding: 0.2em 0.5em;
+  margin: 0.7em 0;
+  width: 38.5em;
+  border: 1px solid #B4B4B4;
+}
+div.password-suggestions ul {
+  margin-bottom: 0;
+}
+.confirm-parent,
+.password-parent {
+  clear: left; /* LTR */
+  margin: 0;
+  width: 36.3em;
+}
+
+// Progress bar.
+.progress-wrapper .progress {
+  margin-bottom: 10px;
+  .bar {
+    border: 0 none;
+    margin: 0;
+  }
+}
+
+// Views AJAX pager.
+.pagination ul > li > a {
+  &.progress-disabled {
+    float: left;
+  }
+  .throbber {
+    margin: 0 -0.25em 0 0.5em;
+    position: relative;
+    top: 1px;
+  }
+}
+.navbar-fixed-top { border-bottom: 4px solid @light-blue; }
+
+.expanded.dropdown.open {
+	//background-color: fafafa;
+	//color: #333333;
+}
+
+// Autocomplete and throbber
+.form-autocomplete, .ui-autocomplete-input {
+  .glyphicon {
+    color: @gray-light;
+    font-size: 120%;
+    &.glyphicon-spin {
+      color: @brand-primary;
+    }
+  }
+  .input-group-addon {
+    background-color: rgb(255, 255, 255);
+  }
+}
+
+// AJAX "Throbber".
+.ajax-progress {
+  .glyphicon {
+    font-size: 90%;
+    margin: 0 -.25em 0 0.5em;
+  }
+}
+
+.glyphicon-spin {
+  display: inline-block;
+  -moz-animation: spin 1s infinite linear;
+  -o-animation: spin 1s infinite linear;
+  -webkit-animation: spin 1s infinite linear;
+  animation: spin 1s infinite linear;
+}
+a .glyphicon-spin {
+  display: inline-block;
+  text-decoration: none;
+}
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    -o-transform: rotate(359deg);
+  }
+}
+@-ms-keyframes spin {
+  0% {
+    -ms-transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+.glyphicon-refresh {
+  -webkit-transform-origin: 50% 57%;
+  -moz-transform-origin: 50% 57%;
+  -ms-transform-origin: 50% 57%;
+  -o-transform-origin: 50% 57%;
+  transform-origin: 50% 57%;
+}
+
